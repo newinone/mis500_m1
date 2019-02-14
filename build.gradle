@@ -1,0 +1,70 @@
+import com.linkedin.gradle.python.tasks.InstallVirtualEnvironmentTask
+import com.linkedin.gradle.python.extension.PythonDetailsFactory
+import com.linkedin.gradle.python.tasks.PipInstallTask
+import static com.linkedin.gradle.python.util.StandardTextValues.CONFIGURATION_PYTHON
+import groovy.json.JsonOutput;
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.linkedin.pygradle:pygradle-plugin:0.+'
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.+'
+    }
+}
+
+group = 'com.newinone'
+
+apply plugin: 'com.linkedin.python-cli'
+
+
+dependencies {
+    python 'pypi:future:0.16.0'
+    python 'pypi:numpy:1.15.2'
+    python 'pypi:pandas:0.19.2'
+    python 'pypi:matplotlib:2.0.0'
+    python 'pypi:requests:2.19.1'
+  //  test 'pypi:mock:1.3.0'
+   // test 'pypi:nose:1.3.7'
+}
+    repositories {
+pyGradlePyPi()
+    }
+
+python {
+    testDir = project.file('src/test/python').path
+    srcDir = project.file('src/main/python').path
+    details {
+        pythonVersion = '2.7'
+    }
+}
+
+pytest {
+    group = 'Verification'
+    description = 'Runs Python Unit Test checks'
+}
+
+flake8 {
+    group = 'Verification'
+    description = 'Runs static analysis checks on Python files'
+}
+
+ext.deployableVenv = new File( buildDir, 'DeployableVenv' )
+
+task createDeployableVenv ( type: InstallVirtualEnvironmentTask ) {
+    pythonDetails = PythonDetailsFactory.makePythonDetails( project, deployableVenv )
+}
+
+task setupDeployableVenv ( type: PipInstallTask ) {
+    group 'Build'
+    description 'Constructs a cut down Python Virtual Environment that can be deployed to the field'
+    dependsOn createDeployableVenv
+    pythonDetails = PythonDetailsFactory.makePythonDetails( project, deployableVenv )
+    sorted false
+    installFileCollection = project.getConfigurations().getByName( CONFIGURATION_PYTHON.getValue() )
+}
+
+
