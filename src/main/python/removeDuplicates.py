@@ -1,45 +1,26 @@
-import numpy as np
-import pandas as pd
-from pandas import DataFrame, Series
+from pandas import DataFrame
 
-series_obj = Series(
-    np.arange(8),
-    index=[
-        'row 1', 'row 2', 'row 3', 'row 4', 'row 5', 'row 6', 'row 7', 'row 8'
-    ])
-print(series_obj['row 2'])
-print(series_obj[1])
+DF_obj = DataFrame({
+    'column 1': [1, 1, 2, 2, 3, 3, 3],
+    'column 2': ['a', 'a', 'b', 'b', 'c', 'c', 'c'],
+    'column 3': ['A', 'A', 'B', 'B', 'C', 'C', 'C']
+})
 
-missing = np.nan
+# Show duplicate True/False
+print(DF_obj.duplicated())
 
-series_obj = Series(
-    ['row 1', 'row 2', missing, 'row 4', 'row 5', missing, 'row 7', 'row 8'])
-print(series_obj)
-# list of missing values True/False
-print(series_obj.isnull())
+# Drop duplicate
+DF_drop = DF_obj.drop_duplicates()
+print(DF_drop)
 
-np.random.seed(25)
-# Generate 6x6 matrix
-DF_obj = DataFrame(np.random.randn(36).reshape(6, 6))
-print(DF_obj)
+DF_obj = DataFrame({
+    'column 1': [1, 1, 2, 2, 3, 3, 3],
+    'column 2': ['a', 'a', 'b', 'b', 'c', 'c', 'c'],
+    'column 3': ['A', 'A', 'B', 'B', 'C', 'D', 'C']
+})
 
-# Change some value to missing
-DF_obj.ix[3:5, 0] = missing
-DF_obj.ix[1:4, 0] = missing
-print(DF_obj)
-
-# Fill 0 to missing values
-filled_DF = DF_obj.fillna(0)
-print(filled_DF)
-
-# Fill column 0 with 0.1 and column 5 with 1.25
-filled_DF = DF_obj.fillna({0: 0.1, 5: 1.25})
-print(filled_DF)
-
-# Forward fill(copy privious value to NaN)
-filled_DF = DF_obj.fillna(method='ffill')
-print(filled_DF)
-
-
+# Drop duplicate row based on column. Row 1, 3 and 6 dropped.
+DF_drop = DF_obj.drop_duplicates()
+print(DF_drop)
 
 

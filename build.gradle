@@ -27,6 +27,8 @@ dependencies {
     python 'pypi:pandas:0.19.2'
     python 'pypi:matplotlib:2.0.0'
     python 'pypi:requests:2.19.1'
+    python 'pypi:Seaborn:+'
+
   //  test 'pypi:mock:1.3.0'
    // test 'pypi:nose:1.3.7'
 }

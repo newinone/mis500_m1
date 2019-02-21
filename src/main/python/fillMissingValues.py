@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 from pandas import DataFrame, Series
 
 series_obj = Series(
@@ -25,7 +24,7 @@ print(DF_obj)
 
 # Change some value to missing
 DF_obj.ix[3:5, 0] = missing
-DF_obj.ix[1:4, 0] = missing
+DF_obj.ix[1:4, 5] = missing
 print(DF_obj)
 
 # Fill 0 to missing values
@@ -41,5 +40,20 @@ filled_DF = DF_obj.fillna(method='ffill')
 print(filled_DF)
 
 
+# Count missing values by column
+print(DF_obj.isnull().sum())
+
+
+# Drop all rows with any NaN
+DF_no_NaN = DF_obj.dropna()
+print(DF_no_NaN)
+
+# Drop all column with any NaN
+DF_no_NaN = DF_obj.dropna(axis=1)
+print(DF_no_NaN)
+
+# Drop all rows with all values are NaN
+DF_no_NaN = DF_obj.dropna(how='all')
+print(DF_no_NaN)
 
 

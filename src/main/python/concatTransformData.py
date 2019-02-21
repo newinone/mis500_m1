@@ -2,44 +2,39 @@ import numpy as np
 import pandas as pd
 from pandas import DataFrame, Series
 
-series_obj = Series(
-    np.arange(8),
-    index=[
-        'row 1', 'row 2', 'row 3', 'row 4', 'row 5', 'row 6', 'row 7', 'row 8'
-    ])
-print(series_obj['row 2'])
-print(series_obj[1])
+#
+DF_obj = pd.DataFrame(np.arange(36).reshape(6, 6))
+DF_obj2 = pd.DataFrame(np.arange(15).reshape(5, 3))
 
-missing = np.nan
+# Join by column
+DF_col_join = pd.concat([DF_obj, DF_obj2], axis=1)
+print(DF_col_join)
 
-series_obj = Series(
-    ['row 1', 'row 2', missing, 'row 4', 'row 5', missing, 'row 7', 'row 8'])
+# Join by row
+DF_row_join = pd.concat([DF_obj, DF_obj2])
+print(DF_row_join)
+
+# Drop rows 0 and 2
+print(DF_obj.drop([0, 2]))
+
+# Drop column 0 and 2
+print(DF_obj.drop([0, 2], axis=1))
+
+series_obj = Series(np.arange(6))
+series_obj.name = "added_variable"
+
 print(series_obj)
-# list of missing values True/False
-print(series_obj.isnull())
+# Add column to after the last column of the DF
+variable_added = DataFrame.join(DF_obj, series_obj)
+print(variable_added)
 
-np.random.seed(25)
-# Generate 6x6 matrix
-DF_obj = DataFrame(np.random.randn(36).reshape(6, 6))
-print(DF_obj)
+# Not reindex after append row
+added_datatable = variable_added.append(variable_added, ignore_index=False)
+print(added_datatable)
 
-# Change some value to missing
-DF_obj.ix[3:5, 0] = missing
-DF_obj.ix[1:4, 0] = missing
-print(DF_obj)
+# reindex row after append row
+added_datatable = variable_added.append(variable_added, ignore_index=True)
+print(added_datatable)
 
-# Fill 0 to missing values
-filled_DF = DF_obj.fillna(0)
-print(filled_DF)
-
-# Fill column 0 with 0.1 and column 5 with 1.25
-filled_DF = DF_obj.fillna({0: 0.1, 5: 1.25})
-print(filled_DF)
-
-# Forward fill(copy privious value to NaN)
-filled_DF = DF_obj.fillna(method='ffill')
-print(filled_DF)
-
-
-
-
+# Sorting data desc by column 5
+print(DF_obj.sort_values(by=[5], ascending=[False]))
